@@ -1,0 +1,4 @@
+vendor/
+
+# Do not keep the cli while we have the keys hardcoded
+cli.php
