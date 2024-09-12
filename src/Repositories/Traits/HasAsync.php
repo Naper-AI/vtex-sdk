@@ -1,6 +1,6 @@
 <?php
 
-namespace VtexSdk\Repositories\Traits;
+namespace Naper\Vtex\Repositories\Traits;
 
 trait HasAsync
 {

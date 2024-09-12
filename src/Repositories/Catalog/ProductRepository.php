@@ -1,14 +1,14 @@
 <?php
 
-namespace VtexSdk\Repositories\Catalog;
+namespace Naper\Vtex\Repositories\Catalog;
 
 use Orkestra\Entities\EntityFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use VtexSdk\Entities\Catalog\Product;
-use VtexSdk\Interfaces\ProductRepositoryInterface;
-use VtexSdk\Entities\Catalog\ProductSpecification;
-use VtexSdk\Repositories\Traits\HasAsync;
+use Naper\Vtex\Entities\Catalog\Product;
+use Naper\Vtex\Interfaces\ProductRepositoryInterface;
+use Naper\Vtex\Entities\Catalog\ProductSpecification;
+use Naper\Vtex\Repositories\Traits\HasAsync;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Client;
 use Exception;

@@ -1,12 +1,12 @@
 <?php
 
-namespace VtexSdk\Interfaces;
+namespace Naper\Vtex\Interfaces;
 
 use Doctrine\Common\Collections\Collection;
 use GuzzleHttp\Promise\PromiseInterface;
-use VtexSdk\Entities\Catalog\CategoryTree;
-use VtexSdk\Entities\Catalog\Category;
-use VtexSdk\Entities\Catalog\Product;
+use Naper\Vtex\Entities\Catalog\CategoryTree;
+use Naper\Vtex\Entities\Catalog\Category;
+use Naper\Vtex\Entities\Catalog\Product;
 
 interface CategoryRepositoryInterface extends AsyncRepositoryInterface
 {

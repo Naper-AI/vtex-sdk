@@ -1,19 +1,19 @@
 <?php
 
-namespace VtexSdk\Repositories\Catalog;
+namespace Naper\Vtex\Repositories\Catalog;
 
 use Orkestra\Entities\EntityFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use VtexSdk\Entities\Catalog\Category;
-use VtexSdk\Entities\Catalog\CategoryTree;
-use VtexSdk\Entities\Catalog\Product;
-use VtexSdk\Interfaces\CategoryRepositoryInterface;
+use Naper\Vtex\Entities\Catalog\Category;
+use Naper\Vtex\Entities\Catalog\CategoryTree;
+use Naper\Vtex\Entities\Catalog\Product;
+use Naper\Vtex\Interfaces\CategoryRepositoryInterface;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Client;
 use Exception;
 use GuzzleHttp\Promise\Create;
-use VtexSdk\Repositories\Traits\HasAsync;
+use Naper\Vtex\Repositories\Traits\HasAsync;
 
 /**
  * @todo implement missing methods

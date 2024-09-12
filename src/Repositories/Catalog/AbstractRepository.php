@@ -1,6 +1,6 @@
 <?php
 
-namespace VtexSdk\Repositories\Catalog;
+namespace Naper\Vtex\Repositories\Catalog;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;

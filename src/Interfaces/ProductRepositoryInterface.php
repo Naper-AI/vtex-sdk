@@ -1,12 +1,12 @@
 <?php
 
-namespace VtexSdk\Interfaces;
+namespace Naper\Vtex\Interfaces;
 
 use Doctrine\Common\Collections\Collection;
 
-use VtexSdk\Entities\Catalog\Product;
+use Naper\Vtex\Entities\Catalog\Product;
 use GuzzleHttp\Promise\PromiseInterface;
-use VtexSdk\Entities\Catalog\ProductSpecification;
+use Naper\Vtex\Entities\Catalog\ProductSpecification;
 use Countable;
 
 interface ProductRepositoryInterface extends AsyncRepositoryInterface, Countable

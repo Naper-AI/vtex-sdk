@@ -1,6 +1,6 @@
 <?php
 
-namespace VtexSdk\Entities\Catalog;
+namespace Naper\Vtex\Entities\Catalog;
 
 use Orkestra\Entities\AbstractEntity;
 use DateTimeInterface;

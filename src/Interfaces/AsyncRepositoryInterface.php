@@ -1,6 +1,6 @@
 <?php
 
-namespace VtexSdk\Interfaces;
+namespace Naper\Vtex\Interfaces;
 
 interface AsyncRepositoryInterface
 {
