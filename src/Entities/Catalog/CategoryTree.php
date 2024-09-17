@@ -4,6 +4,15 @@ namespace Naper\Vtex\Entities\Catalog;
 
 use Orkestra\Entities\AbstractEntity;
 
+/**
+ * @property-read int $id
+ * @property-read string $name
+ * @property-read bool $hasChildren
+ * @property-read string $url
+ * @property-read string $title
+ * @property-read string|null $metaTagDescription
+ * @property-read array $children
+ */
 class CategoryTree extends AbstractEntity
 {
 	protected array $children = [];
@@ -14,7 +23,7 @@ class CategoryTree extends AbstractEntity
 		protected bool $hasChildren,
 		protected string $url,
 		protected string $title,
-		protected string $metaTagDescription
+		protected ?string $metaTagDescription
 	) {
 		//
 	}

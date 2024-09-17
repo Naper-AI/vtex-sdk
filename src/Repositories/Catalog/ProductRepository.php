@@ -3,17 +3,21 @@
 namespace Naper\Vtex\Repositories\Catalog;
 
 use Orkestra\Entities\EntityFactory;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Naper\Vtex\Interfaces\Catalog\ProductRepositoryInterface;
 use Naper\Vtex\Entities\Catalog\Product;
-use Naper\Vtex\Interfaces\ProductRepositoryInterface;
 use Naper\Vtex\Entities\Catalog\ProductSpecification;
 use Naper\Vtex\Repositories\Traits\HasAsync;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Client;
 use Exception;
 use DateTime;
 
+/**
+ * @todo implement missing methods
+ */
 class ProductRepository extends AbstractRepository implements ProductRepositoryInterface
 {
 	use HasAsync;
@@ -32,37 +36,51 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 		//	
 	}
 
-	public function getIterator(): Collection
+	public function getIds(): array|PromiseInterface
 	{
 		$from = $this->offset + 1;
 		$to = $this->offset + $this->length;
 
-		$urls = [];
+		$promises = [];
 		for ($i = $from; $i <= $to; $i += 250) {
 			if ($i + 250 > $to) {
-				$urls[] = $this->baseUrl . "/api/catalog_system/pvt/products/GetProductAndSkuIds?_from={$i}&_to={$to}";
+				$url = $this->baseUrl . "/api/catalog_system/pvt/products/GetProductAndSkuIds?_from={$i}&_to={$to}";
+				$promises[] = $this->client->getAsync($url, [
+					'headers' => $this->getHeaders()
+				]);
 				break;
 			}
-			$urls[] = $this->baseUrl . "/api/catalog_system/pvt/products/GetProductAndSkuIds?_from={$i}&_to=" . ($i + 250);
+			$url = $this->baseUrl . "/api/catalog_system/pvt/products/GetProductAndSkuIds?_from={$i}&_to=" . ($i + 250);
+			$promises[] = $this->client->getAsync($url, [
+				'headers' => $this->getHeaders()
+			]);
 		}
 
-		$results = $this->getMultipleAsync($urls);
+		$promise = Utils::all($promises)->then(function ($results) {
+			$productSdks = [];
+			foreach ($results as $response) {
+				$statusCode = $response->getStatusCode();
 
-		$productSdks = [];
-		foreach ($results as $response) {
-			$statusCode = $response->getStatusCode();
+				if ($statusCode !== 200) {
+					throw new Exception('Error: ' . $statusCode);
+				}
 
-			if ($statusCode !== 200) {
-				throw new Exception('Error: ' . $statusCode);
+				$body = $response->getBody();
+				$data = json_decode($body, true)['data'] ?? [];
+				$productSdks = $productSdks + $data; // Keep the array keys
 			}
 
-			$body = $response->getBody();
-			$data = json_decode($body, true)['data'] ?? [];
-			$productSdks = $productSdks + $data; // Keep the array keys
-		}
+			ksort($productSdks);
+			return array_keys($productSdks);
+		});
 
-		ksort($productSdks);
-		$productIds = array_keys($productSdks);
+		return $this->isAsync ? $promise : $promise->wait();
+	}
+
+	public function getIterator(): Collection
+	{
+		$productIds = $this->getIds();
+		$productIds = $this->isAsync ? $productIds->wait() : $productIds;
 
 		if (empty($productIds)) {
 			return new ArrayCollection([]);

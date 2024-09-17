@@ -1,16 +1,21 @@
 <?php
 
-namespace Naper\Vtex\Interfaces;
+namespace Naper\Vtex\Interfaces\Catalog;
 
-use Doctrine\Common\Collections\Collection;
-
-use Naper\Vtex\Entities\Catalog\Product;
-use GuzzleHttp\Promise\PromiseInterface;
+use Naper\Vtex\Interfaces\AsyncRepositoryInterface;
 use Naper\Vtex\Entities\Catalog\ProductSpecification;
+use Naper\Vtex\Entities\Catalog\Product;
+use Doctrine\Common\Collections\Collection;
+use GuzzleHttp\Promise\PromiseInterface;
 use Countable;
 
 interface ProductRepositoryInterface extends AsyncRepositoryInterface, Countable
 {
+	/**
+	 * @return int[]|PromiseInterface<int[]>
+	 */
+	public function getIds(): array|PromiseInterface;
+
 	/**
 	 * @return Collection<array-key,Product>
 	 */

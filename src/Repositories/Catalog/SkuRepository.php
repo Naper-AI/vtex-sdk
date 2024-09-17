@@ -2,16 +2,19 @@
 
 namespace Naper\Vtex\Repositories\Catalog;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Orkestra\Entities\EntityFactory;
-use Naper\Vtex\Interfaces\SkuRepositoryInterface;
+use Naper\Vtex\Interfaces\Catalog\SkuRepositoryInterface;
 use Naper\Vtex\Entities\Catalog\Sku;
 use Naper\Vtex\Repositories\Traits\HasAsync;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Client;
 use Exception;
 
+/**
+ * @todo implement missing methods
+ */
 class SkuRepository extends AbstractRepository implements SkuRepositoryInterface
 {
 	use HasAsync;

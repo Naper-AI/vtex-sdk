@@ -1,10 +1,11 @@
 <?php
 
-namespace Naper\Vtex\Interfaces;
+namespace Naper\Vtex\Interfaces\Catalog;
 
+use Naper\Vtex\Interfaces\AsyncRepositoryInterface;
+use Naper\Vtex\Entities\Catalog\Sku;
 use Doctrine\Common\Collections\Collection;
 use GuzzleHttp\Promise\PromiseInterface;
-use Naper\Vtex\Entities\Catalog\Sku;
 
 interface SkuRepositoryInterface extends AsyncRepositoryInterface
 {

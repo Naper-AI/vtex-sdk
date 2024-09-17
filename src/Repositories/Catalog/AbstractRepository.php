@@ -3,16 +3,15 @@
 namespace Naper\Vtex\Repositories\Catalog;
 
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use Exception;
 
-abstract class AbstractRepository
+/**
+ * @todo Delete this class and migrate getMultipleAsync
+ * to a trait or inner method with Utils::all instead of Pool class
+ */
+abstract class AbstractRepository extends \Naper\Vtex\Repositories\AbstractRepository
 {
-	protected Client $client;
-	protected string $baseUrl;
-	protected string $AppKey;
-	protected string $AppToken;
 	protected int $concurrency = 5;
 
 	protected function getMultipleAsync(array $urls): array
@@ -38,15 +37,5 @@ abstract class AbstractRepository
 		$promise->wait();
 
 		return $results;
-	}
-
-	protected function getHeaders(): array
-	{
-		return [
-			'Accept' => 'application/json',
-			'Content-Type' => 'application/json',
-			'X-VTEX-API-AppKey' => $this->AppKey,
-			'X-VTEX-API-AppToken' => $this->AppToken,
-		];
 	}
 }
