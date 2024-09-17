@@ -21,8 +21,8 @@ class SkuPriceRepository extends AbstractRepository implements SkuPriceRepositor
 		protected EntityFactory $factory,
 		protected Client $client,
 		protected string $baseUrl,
-		protected string $AppKey,
-		protected string $AppToken,
+		protected string $appKey,
+		protected string $appToken,
 		protected string $accountName,
 	) {
 		//

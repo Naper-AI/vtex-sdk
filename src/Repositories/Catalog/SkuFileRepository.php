@@ -23,8 +23,8 @@ class SkuFileRepository extends AbstractRepository implements SkuFileRepositoryI
 		protected EntityFactory $factory,
 		protected Client $client,
 		protected string $baseUrl,
-		protected string $AppKey,
-		protected string $AppToken,
+		protected string $appKey,
+		protected string $appToken,
 	) {
 		//
 	}

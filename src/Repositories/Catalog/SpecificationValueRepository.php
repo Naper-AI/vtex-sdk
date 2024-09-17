@@ -23,8 +23,8 @@ class SpecificationValueRepository extends AbstractRepository implements Specifi
 		protected EntityFactory $factory,
 		protected Client $client,
 		protected string $baseUrl,
-		protected string $AppKey,
-		protected string $AppToken,
+		protected string $appKey,
+		protected string $appToken,
 	) {
 		//
 	}

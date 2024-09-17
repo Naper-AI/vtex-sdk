@@ -2,9 +2,7 @@
 
 namespace Naper\Vtex\Repositories\Catalog;
 
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Pool;
-use Exception;
+use GuzzleHttp\Promise\Utils;
 
 /**
  * @todo Delete this class and migrate getMultipleAsync
@@ -12,30 +10,14 @@ use Exception;
  */
 abstract class AbstractRepository extends \Naper\Vtex\Repositories\AbstractRepository
 {
-	protected int $concurrency = 5;
-
 	protected function getMultipleAsync(array $urls): array
 	{
-		$requests = function ($urls) {
-			foreach ($urls as $url) {
-				yield new Request('GET', $url, $this->getHeaders());
-			}
-		};
+		$promise = Utils::all(array_map(function ($url) {
+			return $this->client->requestAsync('GET', $url, [
+				'headers' => $this->getHeaders()
+			]);
+		}, $urls));
 
-		$results = [];
-		$pool = new Pool($this->client, $requests($urls), [
-			'concurrency' => $this->concurrency,
-			'fulfilled' => function ($response, $index) use (&$results) {
-				$results[$index] = $response;
-			},
-			'rejected' => function ($reason, $index) {
-				throw new Exception('Error: ' . $reason->getMessage());
-			},
-		]);
-
-		$promise = $pool->promise();
-		$promise->wait();
-
-		return $results;
+		return $promise->wait();
 	}
 }
