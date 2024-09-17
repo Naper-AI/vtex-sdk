@@ -1,5 +1,5 @@
 {
-    "name": "lucas/vtex-sdk",
+    "name": "naper/vtex-sdk",
     "type": "library",
     "license": "MIT",
     "autoload": {
