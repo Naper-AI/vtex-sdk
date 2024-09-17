@@ -13,12 +13,12 @@
             "email": "lucas.carvalhopl@outlook.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {
-        "guzzlehttp/guzzle": "8.0.x-dev"
-    },
     "require-dev": {
         "luccpl/orkestra": "dev-release/1.1.0",
-        "doctrine/collections": "3.0.x-dev"
+        "doctrine/collections": "^2.2"
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.9",
+        "guzzlehttp/promises": "^2.0"
     }
 }
