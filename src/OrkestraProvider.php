@@ -28,7 +28,12 @@ class OrkestraProvider implements ProviderInterface
 	public function register(App $app): void
 	{
 		$app->config()->set('definition', [
-			'vtex' => ['The vtex API configuration', []],
+			'vtex' => ['The vtex API configuration', [
+				'base_url' => '',
+				'app_key' => '',
+				'app_token' => '',
+				'account_name' => '',
+			]],
 		]);
 
 		$app->config()->set('validation', [
