@@ -17,9 +17,11 @@ interface ProductRepositoryInterface extends AsyncRepositoryInterface, Countable
 	public function getIds(): array|PromiseInterface;
 
 	/**
-	 * @return Collection<array-key,Product>
+	 * @return Collection<array-key,Product>|PromiseInterface<Collection<array-key,Product>>
 	 */
-	public function getIterator(): Collection;
+	public function getIterator(): Collection|PromiseInterface;
+
+	public function get(int $id): null|Product|PromiseInterface;
 
 	/**
 	 * @return $this

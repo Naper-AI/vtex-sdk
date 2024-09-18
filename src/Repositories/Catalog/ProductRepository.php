@@ -76,7 +76,7 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 		return $this->isAsync ? $promise : $promise->wait();
 	}
 
-	public function getIterator(): Collection
+	public function getIterator(): Collection|PromiseInterface
 	{
 		$productIds = $this->getIds();
 		$productIds = $this->isAsync ? $productIds->wait() : $productIds;
@@ -85,18 +85,28 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 			return new ArrayCollection([]);
 		}
 
-		$results = $this->getMultipleAsync(
-			urls: array_map(fn ($id) => $this->baseUrl . '/api/catalog/pvt/product/' . $id, $productIds)
-		);
+		$promises = array_map(fn ($id) => $this->async()->get($id)->then(), $productIds);
+		$products = Utils::all($promises)->then(fn ($products) => new ArrayCollection($products));
+		return $this->isAsync ? $products : $products->wait();
+	}
 
-		foreach ($results as $response) {
-			$statusCode = $response->getStatusCode();
+	public function get(int $id): null|Product|PromiseInterface
+	{
+		$url = $this->baseUrl . '/api/catalog/pvt/product/' . $id;
+		$promise = $this->client->getAsync($url, [
+			'headers' => $this->getHeaders()
+		])->then(function ($res) {
+			$statusCode = $res->getStatusCode();
+
+			if ($statusCode === 404) {
+				return null;
+			}
 
 			if ($statusCode !== 200) {
 				throw new Exception('Error: ' . $statusCode);
 			}
 
-			$body = $response->getBody();
+			$body = $res->getBody();
 			$data = json_decode($body, true);
 
 			foreach ($data as $key => $value) {
@@ -108,10 +118,10 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 			$data['keyWords'] = explode(',', $data['keyWords']);
 			$data['keyWords'] = array_map('trim', $data['keyWords']);
 
-			$products[] = $this->factory->make(Product::class, ...$data);
-		}
+			return $this->factory->make(Product::class, ...$data);
+		});
 
-		return new ArrayCollection($products);
+		return $this->isAsync ? $promise : $promise->wait();
 	}
 
 	public function slice(int $offset, int $length): self
