@@ -21,7 +21,7 @@ interface ProductRepositoryInterface extends AsyncRepositoryInterface, Countable
 	 */
 	public function getIterator(): Collection|PromiseInterface;
 
-	public function get(int $id): null|Product|PromiseInterface;
+	public function get(int $id): Product|PromiseInterface;
 
 	/**
 	 * @return $this

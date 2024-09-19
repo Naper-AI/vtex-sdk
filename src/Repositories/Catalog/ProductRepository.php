@@ -90,22 +90,12 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 		return $this->isAsync ? $products : $products->wait();
 	}
 
-	public function get(int $id): null|Product|PromiseInterface
+	public function get(int $id): Product|PromiseInterface
 	{
 		$url = $this->baseUrl . '/api/catalog/pvt/product/' . $id;
 		$promise = $this->client->getAsync($url, [
 			'headers' => $this->getHeaders()
 		])->then(function ($res) {
-			$statusCode = $res->getStatusCode();
-
-			if ($statusCode === 404) {
-				return null;
-			}
-
-			if ($statusCode !== 200) {
-				throw new Exception('Error: ' . $statusCode);
-			}
-
 			$body = $res->getBody();
 			$data = json_decode($body, true);
 

@@ -9,9 +9,9 @@ use GuzzleHttp\Promise\PromiseInterface;
 interface SkuPriceRepositoryInterface extends AsyncRepositoryInterface
 {
 	/**
-	 * @return null|SkuPrice|PromiseInterface<SkuPrice>
+	 * @return SkuPrice|PromiseInterface<SkuPrice>
 	 */
-	public function get(int $id): null|SkuPrice|PromiseInterface;
+	public function get(int $id): SkuPrice|PromiseInterface;
 
 	public function update(SkuPrice $price): null|PromiseInterface;
 

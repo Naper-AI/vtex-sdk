@@ -9,9 +9,9 @@ use GuzzleHttp\Promise\PromiseInterface;
 interface BrandRepositoryInterface extends AsyncRepositoryInterface
 {
 	/**
-	 * @return null|Brand|PromiseInterface<Brand>
+	 * @return Brand|PromiseInterface<Brand>
 	 */
-	public function get(int $id): null|Brand|PromiseInterface;
+	public function get(int $id): Brand|PromiseInterface;
 
 	public function update(Brand $brand): null|PromiseInterface;
 

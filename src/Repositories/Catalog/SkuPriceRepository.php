@@ -28,22 +28,12 @@ class SkuPriceRepository extends AbstractRepository implements SkuPriceRepositor
 		//
 	}
 
-	public function get(int $id): null|SkuPrice|PromiseInterface
+	public function get(int $id): SkuPrice|PromiseInterface
 	{
 		$url = "https://api.vtex.com/{$this->accountName}/pricing/prices/{$id}";
 		$promise = $this->client->requestAsync('GET', $url, [
 			'headers' => $this->getHeaders()
 		])->then(function ($res) {
-			$statusCode = $res->getStatusCode();
-
-			if ($statusCode === 404) {
-				return null;
-			}
-
-			if ($statusCode !== 200) {
-				throw new Exception('Error: ' . $statusCode);
-			}
-
 			$body = $res->getBody();
 			$data = json_decode($body, true);
 
