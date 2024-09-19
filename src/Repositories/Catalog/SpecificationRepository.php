@@ -29,7 +29,7 @@ class SpecificationRepository extends AbstractRepository implements Specificatio
 		//
 	}
 
-	public function get(int $id): Specification|PromiseInterface
+	public function get(int $id): null|Specification|PromiseInterface
 	{
 		if (isset($this->cache[$id])) {
 			return $this->cache[$id];
@@ -40,6 +40,10 @@ class SpecificationRepository extends AbstractRepository implements Specificatio
 			'headers' => $this->getHeaders()
 		])->then(function ($res) {
 			$statusCode = $res->getStatusCode();
+
+			if ($statusCode === 404) {
+				return null;
+			}
 
 			if ($statusCode !== 200) {
 				throw new Exception('Error: ' . $statusCode);

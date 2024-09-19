@@ -21,9 +21,9 @@ interface CategoryRepositoryInterface extends AsyncRepositoryInterface
 	public function create(Category $category): PromiseInterface|null;
 
 	/**
-	 * @return Category|PromiseInterface<Category>
+	 * @return null|Category|PromiseInterface<Category>
 	 */
-	public function get(int $id): Category|PromiseInterface;
+	public function get(int $id): null|Category|PromiseInterface;
 
 	/**
 	 * @return Collection<array-key,Category>|PromiseInterface<Collection<array-key,Category>>

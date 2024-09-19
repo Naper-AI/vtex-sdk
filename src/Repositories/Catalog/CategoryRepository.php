@@ -73,7 +73,7 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
 		return $this->isAsync ? $promise : $promise->wait();
 	}
 
-	public function get(int $id): Category|PromiseInterface
+	public function get(int $id): null|Category|PromiseInterface
 	{
 		if (isset($this->cache[$id])) {
 			return $this->isAsync ? Create::promiseFor($this->cache[$id]) : $this->cache[$id];
@@ -84,6 +84,10 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
 			'headers' => $this->getHeaders()
 		])->then(function ($res) {
 			$statusCode = $res->getStatusCode();
+
+			if ($statusCode === 404) {
+				return null;
+			}
 
 			if ($statusCode !== 200) {
 				throw new Exception('Error: ' . $statusCode);

@@ -27,13 +27,17 @@ class BrandRepository extends AbstractRepository implements BrandRepositoryInter
 		//
 	}
 
-	public function get(int $id): Brand|PromiseInterface
+	public function get(int $id): null|Brand|PromiseInterface
 	{
 		$url = $this->baseUrl . '/api/catalog_system/pvt/brand/' . $id;
 		$promise = $this->client->requestAsync('GET', $url, [
 			'headers' => $this->getHeaders()
 		])->then(function ($res) {
 			$statusCode = $res->getStatusCode();
+
+			if ($statusCode === 404) {
+				return null;
+			}
 
 			if ($statusCode !== 200) {
 				throw new Exception('Error: ' . $statusCode);
