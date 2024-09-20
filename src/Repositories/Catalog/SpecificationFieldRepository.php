@@ -35,7 +35,7 @@ class SpecificationFieldRepository extends AbstractRepository implements Specifi
 			return $this->cache[$id];
 		}
 
-		$url = $this->baseUrl . "/api/catalog/pvt/SpecificationField/{$id}";
+		$url = $this->baseUrl . "/api/catalog_system/pub/specification/fieldGet/{$id}";
 		$promise = $this->client->requestAsync('GET', $url, [
 			'headers' => $this->getHeaders()
 		])->then(function ($res) {

@@ -38,7 +38,7 @@ class Specification extends AbstractEntity
 		protected bool $isActive,
 		protected bool $isTopMenuLinkActive,
 		protected bool $isSideMenuLinkActive,
-		protected string|null $defaultValue,
+		protected ?string $defaultValue,
 	) {
 		//
 	}
