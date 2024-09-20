@@ -35,7 +35,7 @@ class SpecificationRepository extends AbstractRepository implements Specificatio
 			return $this->cache[$id];
 		}
 
-		$url = $this->baseUrl . "/api/catalog/pvt/specificationvalue/{$id}";
+		$url = $this->baseUrl . "/api/catalog/pvt/specification/{$id}";
 		$promise = $this->client->requestAsync('GET', $url, [
 			'headers' => $this->getHeaders()
 		])->then(function ($res) {
@@ -44,10 +44,20 @@ class SpecificationRepository extends AbstractRepository implements Specificatio
 
 			$specification = $this->factory->make(Specification::class,
 				id: $data['Id'],
-				skuId: $data['SkuId'],
-				fieldId: $data['FieldId'],
-				fieldValueId: $data['FieldValueId'],
-				text: $data['Text'],
+				fieldTypeId: $data['FieldTypeId'],
+				categoryId: $data['CategoryId'],
+				fieldGroupId: $data['FieldGroupId'],
+				name: $data['Name'],
+				description: $data['Description'],
+				position: $data['Position'],
+				isFilter: $data['IsFilter'],
+				isRequired: $data['IsRequired'],
+				isOnProductDetails: $data['IsOnProductDetails'],
+				isStockKeepingUnit: $data['IsStockKeepingUnit'],
+				isActive: $data['IsActive'],
+				isTopMenuLinkActive: $data['IsTopMenuLinkActive'],
+				isSideMenuLinkActive: $data['IsSideMenuLinkActive'],
+				defaultValue: $data['DefaultValue'],
 			);
 
 			$this->cache[$specification->id] = $specification;

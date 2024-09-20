@@ -5,6 +5,7 @@ namespace Naper\Vtex\Entities\Catalog;
 use Orkestra\Entities\AbstractEntity;
 
 /**
+ * @property-read int $id
  * @property-read int $fieldTypeId
  * @property-read int $categoryId
  * @property-read int $fieldGroupId
@@ -18,12 +19,12 @@ use Orkestra\Entities\AbstractEntity;
  * @property-read bool $isActive
  * @property-read bool $isTopMenuLinkActive
  * @property-read bool $isSideMenuLinkActive
- * @property-read int|null $id
  * @property-read string|null $defaultValue
  */
 class Specification extends AbstractEntity
 {
 	public function __construct(
+		protected int $id,
 		protected int $fieldTypeId,
 		protected int $categoryId,
 		protected int $fieldGroupId,
@@ -37,8 +38,7 @@ class Specification extends AbstractEntity
 		protected bool $isActive,
 		protected bool $isTopMenuLinkActive,
 		protected bool $isSideMenuLinkActive,
-		protected ?int $id = null,
-		protected ?string $defaultValue = null,
+		protected string|null $defaultValue,
 	) {
 		//
 	}
