@@ -3,8 +3,8 @@
 namespace Naper\Vtex\Repositories\Catalog;
 
 use Orkestra\Entities\EntityFactory;
-use Naper\Vtex\Entities\Catalog\SpecificationValue;
-use Naper\Vtex\Interfaces\Catalog\SpecificationValueRepositoryInterface;
+use Naper\Vtex\Entities\Catalog\SpecificationField;
+use Naper\Vtex\Interfaces\Catalog\SpecificationFieldRepositoryInterface;
 use Naper\Vtex\Repositories\Traits\HasAsync;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Client;
@@ -13,7 +13,7 @@ use Exception;
 /**
  * @todo implement missing methods
  */
-class SpecificationValueRepository extends AbstractRepository implements SpecificationValueRepositoryInterface
+class SpecificationFieldRepository extends AbstractRepository implements SpecificationFieldRepositoryInterface
 {
 	use HasAsync;
 
@@ -29,26 +29,36 @@ class SpecificationValueRepository extends AbstractRepository implements Specifi
 		//
 	}
 
-	public function get(int $id): SpecificationValue|PromiseInterface
+	public function get(int $id): SpecificationField|PromiseInterface
 	{
 		if (isset($this->cache[$id])) {
 			return $this->cache[$id];
 		}
 
-		$url = $this->baseUrl . "/api/catalog/pvt/specificationvalue/{$id}";
+		$url = $this->baseUrl . "/api/catalog/pvt/SpecificationField/{$id}";
 		$promise = $this->client->requestAsync('GET', $url, [
 			'headers' => $this->getHeaders()
 		])->then(function ($res) {
 			$body = $res->getBody();
 			$data = json_decode($body, true);
 
-			$value = $this->factory->make(SpecificationValue::class,
-				fieldValueId: $data['FieldValueId'],
-				fieldId: $data['FieldId'],
+			$value = $this->factory->make(SpecificationField::class,
 				name: $data['Name'],
-				text: $data['Text'],
+				fieldId: $data['FieldId'],
 				isActive: $data['IsActive'],
+				isRequired: $data['IsRequired'],
+				fieldTypeId: $data['FieldTypeId'],
+				fieldTypeName: $data['FieldTypeName'],
+				fieldValueId: $data['FieldValueId'],
+				isStockKeepingUnit: $data['IsStockKeepingUnit'],
+				isFilter: $data['IsFilter'],
+				isOnProductDetails: $data['IsOnProductDetails'],
 				position: $data['Position'],
+				isTopMenuLinkActive: $data['IsTopMenuLinkActive'],
+				isSideMenuLinkActive: $data['IsSideMenuLinkActive'],
+				defaultValue: $data['DefaultValue'],
+				fieldGroupId: $data['FieldGroupId'],
+				fieldGroupName: $data['FieldGroupName'],
 			);
 
 			$this->cache[$value->fieldValueId] = $value;
@@ -58,12 +68,12 @@ class SpecificationValueRepository extends AbstractRepository implements Specifi
 		return $this->isAsync ? $promise : $promise->wait();
 	}
 
-	public function update(SpecificationValue $specification): null|PromiseInterface
+	public function update(SpecificationField $specification): null|PromiseInterface
 	{
 		throw new Exception('Method not implemented');
 	}
 
-	public function create(SpecificationValue $specification): null|PromiseInterface
+	public function create(SpecificationField $specification): null|PromiseInterface
 	{
 		throw new Exception('Method not implemented');
 	}
