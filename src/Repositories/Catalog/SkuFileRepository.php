@@ -25,6 +25,7 @@ class SkuFileRepository extends AbstractRepository implements SkuFileRepositoryI
 		protected string $baseUrl,
 		protected string $appKey,
 		protected string $appToken,
+		protected string $accountName,
 	) {
 		//
 	}
@@ -45,6 +46,8 @@ class SkuFileRepository extends AbstractRepository implements SkuFileRepositoryI
 			$data = json_decode($body, true);
 
 			$skus = array_map(function ($item) {
+				$url = $item['Url'] ?? null;
+				$url ??= $item['FileLocation'] ? 'https://' . $this->accountName . '.' . $item['FileLocation'] : null;
 				return $this->factory->make(SkuFile::class,
 					id: $item['Id'],
 					archiveId: $item['ArchiveId'],
@@ -53,7 +56,7 @@ class SkuFileRepository extends AbstractRepository implements SkuFileRepositoryI
 					isMain: $item['IsMain'],
 					text: $item['Text'],
 					label: $item['Label'],
-					url: $item['Url'],
+					url: $url,
 					fileLocation: $item['FileLocation'],
 				);
 			}, $data);

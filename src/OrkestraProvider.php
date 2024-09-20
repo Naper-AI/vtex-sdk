@@ -62,7 +62,7 @@ class OrkestraProvider implements ProviderInterface
 		$app->bind(SkuRepositoryInterface::class, SkuRepository::class)->constructor(...$vtexConfig);
 		$app->bind(SkuSpecificationRepositoryInterface::class, SkuSpecificationRepository::class)->constructor(...$vtexConfig);
 		$app->bind(SkuPriceRepositoryInterface::class, SkuPriceRepository::class)->constructor(...$vtexConfig, accountName: $getAccountName);
-		$app->bind(SkuFileRepositoryInterface::class, SkuFileRepository::class)->constructor(...$vtexConfig);
+		$app->bind(SkuFileRepositoryInterface::class, SkuFileRepository::class)->constructor(...$vtexConfig, accountName: $getAccountName);
 		$app->bind(SpecificationRepositoryInterface::class, SpecificationRepository::class)->constructor(...$vtexConfig);
 		$app->bind(SpecificationValueRepositoryInterface::class, SpecificationValueRepository::class)->constructor(...$vtexConfig);
 	}
