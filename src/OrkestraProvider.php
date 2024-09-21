@@ -12,7 +12,7 @@ use Naper\Vtex\Interfaces\Catalog\SkuPriceRepositoryInterface;
 use Naper\Vtex\Interfaces\Catalog\SkuRepositoryInterface;
 use Naper\Vtex\Interfaces\Catalog\SkuSpecificationRepositoryInterface;
 use Naper\Vtex\Interfaces\Catalog\SpecificationRepositoryInterface;
-use Naper\Vtex\Interfaces\Catalog\SpecificationFieldRepositoryInterface;
+use Naper\Vtex\Interfaces\Catalog\SpecificationValueRepositoryInterface;
 
 use Naper\Vtex\Repositories\Catalog\CategoryRepository;
 use Naper\Vtex\Repositories\Catalog\ProductRepository;
@@ -21,7 +21,7 @@ use Naper\Vtex\Repositories\Catalog\SkuPriceRepository;
 use Naper\Vtex\Repositories\Catalog\SkuRepository;
 use Naper\Vtex\Repositories\Catalog\SkuSpecificationRepository;
 use Naper\Vtex\Repositories\Catalog\SpecificationRepository;
-use Naper\Vtex\Repositories\Catalog\SpecificationFieldRepository;
+use Naper\Vtex\Repositories\Catalog\SpecificationValueRepository;
 
 class OrkestraProvider implements ProviderInterface
 {
@@ -64,7 +64,7 @@ class OrkestraProvider implements ProviderInterface
 		$app->bind(SkuPriceRepositoryInterface::class, SkuPriceRepository::class)->constructor(...$vtexConfig, accountName: $getAccountName);
 		$app->bind(SkuFileRepositoryInterface::class, SkuFileRepository::class)->constructor(...$vtexConfig, accountName: $getAccountName);
 		$app->bind(SpecificationRepositoryInterface::class, SpecificationRepository::class)->constructor(...$vtexConfig);
-		$app->bind(SpecificationFieldRepositoryInterface::class, SpecificationFieldRepository::class)->constructor(...$vtexConfig);
+		$app->bind(SpecificationValueRepositoryInterface::class, SpecificationValueRepository::class)->constructor(...$vtexConfig);
 	}
 
 	public function boot(App $app): void
