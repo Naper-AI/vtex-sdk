@@ -7,7 +7,6 @@ use Orkestra\Entities\AbstractEntity;
 /**
  * @property-read int $id
  * @property-read int $fieldTypeId
- * @property-read int $categoryId
  * @property-read int $fieldGroupId
  * @property-read string $name
  * @property-read string $description
@@ -26,7 +25,6 @@ class Specification extends AbstractEntity
 	public function __construct(
 		protected int $id,
 		protected int $fieldTypeId,
-		protected int $categoryId,
 		protected int $fieldGroupId,
 		protected string $name,
 		protected string $description,

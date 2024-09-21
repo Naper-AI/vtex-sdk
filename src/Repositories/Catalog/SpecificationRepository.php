@@ -45,7 +45,6 @@ class SpecificationRepository extends AbstractRepository implements Specificatio
 			$specification = $this->factory->make(Specification::class,
 				id: $data['Id'],
 				fieldTypeId: $data['FieldTypeId'],
-				categoryId: $data['CategoryId'],
 				fieldGroupId: $data['FieldGroupId'],
 				name: $data['Name'],
 				description: $data['Description'],

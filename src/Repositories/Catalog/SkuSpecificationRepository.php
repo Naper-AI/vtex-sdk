@@ -35,12 +35,6 @@ class SkuSpecificationRepository extends AbstractRepository implements SkuSpecif
 		$promise = $this->client->requestAsync('GET', $url, [
 			'headers' => $this->getHeaders()
 		])->then(function ($res) {
-			$statusCode = $res->getStatusCode();
-
-			if ($statusCode !== 200) {
-				throw new Exception('Error: ' . $statusCode);
-			}
-
 			$body = $res->getBody();
 			$data = json_decode($body, true);
 
