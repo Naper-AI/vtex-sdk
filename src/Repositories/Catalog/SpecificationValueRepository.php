@@ -44,18 +44,18 @@ class SpecificationValueRepository extends AbstractRepository implements Specifi
 			$body = $res->getBody();
 			$data = json_decode($body, true);
 
-			$values = array_map(function ($item) use ($fieldId) {
-				return $this->factory->make(SpecificationValue::class,
+			$values = new ArrayCollection(
+				array_map(fn ($item) => $this->factory->make(SpecificationValue::class,
 					fieldValueId: $item['FieldValueId'],
 					fieldId: $fieldId,
 					value: $item['Value'],
 					isActive: $item['IsActive'],
 					position: $item['Position'],
-				);
-			}, $data);
+				), $data)
+			);
 
 			$this->cache[$fieldId] = $values;
-			return new ArrayCollection($values);
+			return $values;
 		});
 
 		return $this->isAsync ? $promise : $promise->wait();
