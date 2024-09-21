@@ -37,7 +37,6 @@ class SkuSpecificationRepository extends AbstractRepository implements SkuSpecif
 		])->then(function ($res) {
 			$body = $res->getBody();
 			$data = json_decode($body, true);
-
 			$skus = array_map(function ($item) {
 				return $this->factory->make(SkuSpecification::class,
 					id: $item['Id'],

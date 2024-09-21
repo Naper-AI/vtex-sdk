@@ -29,7 +29,7 @@ class SpecificationFieldRepository extends AbstractRepository implements Specifi
 		//
 	}
 
-	public function get(int $id): null|SpecificationField|PromiseInterface
+	public function get(int $id): SpecificationField|PromiseInterface
 	{
 		if (isset($this->cache[$id])) {
 			return $this->cache[$id];
@@ -41,10 +41,6 @@ class SpecificationFieldRepository extends AbstractRepository implements Specifi
 		])->then(function ($res) {
 			$body = $res->getBody();
 			$data = json_decode($body, true);
-
-			if (!$data) {
-				return null;
-			}
 
 			$value = $this->factory->make(SpecificationField::class,
 				name: $data['Name'],

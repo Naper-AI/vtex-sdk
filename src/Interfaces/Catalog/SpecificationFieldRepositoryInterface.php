@@ -9,9 +9,9 @@ use GuzzleHttp\Promise\PromiseInterface;
 interface SpecificationFieldRepositoryInterface extends AsyncRepositoryInterface
 {
 	/**
-	 * @return null|SpecificationField|PromiseInterface<null|SpecificationField>
+	 * @return SpecificationField|PromiseInterface<SpecificationField>
 	 */
-	public function get(int $id): null|SpecificationField|PromiseInterface;
+	public function get(int $id): SpecificationField|PromiseInterface;
 
 	public function update(SpecificationField $specification): null|PromiseInterface;
 
