@@ -11,8 +11,9 @@ use Naper\Vtex\Repositories\Traits\HasAsync;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use GuzzleHttp\Promise\PromiseInterface;
-use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Create;
+use GuzzleHttp\Promise\Utils;
+use GuzzleHttp\Client;
 use Exception;
 
 /**
@@ -70,13 +71,16 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
 	public function get(int $id): Category|PromiseInterface
 	{
 		if (isset($this->cache[$id])) {
+			if ($this->cache[$id] instanceof PromiseInterface) {
+				return $this->isAsync ? $this->cache[$id] : $this->cache[$id]->wait();
+			}
 			return $this->isAsync ? Create::promiseFor($this->cache[$id]) : $this->cache[$id];
 		}
 
 		$url = $this->baseUrl . '/api/catalog/pvt/category/' . $id;
 		$promise = $this->client->requestAsync('GET', $url, [
 			'headers' => $this->getHeaders()
-		])->then(function ($res) {
+		])->then(function ($res) use ($id) {
 			$body = $res->getBody();
 			$data = json_decode($body, true);
 
@@ -101,11 +105,11 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
 				hasChildren: $data['HasChildren']
 			);
 
-			$this->cache[$category->id] = $category;
-
+			$this->cache[$id] = $category;
 			return $category;
 		});
 
+		$this->cache[$id] = $promise;
 		return $this->isAsync ? $promise : $promise->wait();
 	}
 
@@ -135,61 +139,10 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
 			$data = json_decode($body, true);
 
 			$idsToSearch = array_map(fn ($item) => $item['CategoryId'], $data);
-
-			$cached = array_filter($idsToSearch, fn ($id) => isset($this->cache[$id]));
-			$idsToSearch = array_diff($idsToSearch, $cached);
-
-			if (count($idsToSearch) === 0) {
-				$categories = array_map(fn ($id) => $this->cache[$id], $cached);
-				return new ArrayCollection($categories);
-			}
-
-			$categoryUrl = fn ($id) => $this->baseUrl . '/api/catalog/pvt/category/' . $id;
-			$categoriesUrls = array_map(fn ($id) => $categoryUrl($id), $idsToSearch);
-
-			$categories = $this->getMultipleAsync($categoriesUrls);
-			$categories = array_map(function ($response) {
-				$statusCode = $response->getStatusCode();
-
-				if ($statusCode !== 200) {
-					throw new Exception('Error: ' . $statusCode);
-				}
-
-				$body = $response->getBody();
-				$data = json_decode($body, true);
-
-				return $this->factory->make(
-					Category::class,
-					id: $data['Id'],
-					name: $data['Name'],
-					fatherCategoryId: $data['FatherCategoryId'],
-					title: $data['Title'],
-					description: $data['Description'],
-					keywords: array_map('trim', explode(',', $data['Keywords'])),
-					isActive: $data['IsActive'],
-					lomadeeCampaignCode: $data['LomadeeCampaignCode'],
-					adWordsRemarketingCode: $data['AdWordsRemarketingCode'],
-					showInStoreFront: $data['ShowInStoreFront'],
-					showBrandFilter: $data['ShowBrandFilter'],
-					activeStoreFrontLink: $data['ActiveStoreFrontLink'],
-					globalCategoryId: $data['GlobalCategoryId'],
-					stockKeepingUnitSelectionMode: $data['StockKeepingUnitSelectionMode'],
-					score: $data['Score'],
-					linkId: $data['LinkId'],
-					hasChildren: $data['HasChildren']
-				);
-			}, $categories);
-
-			$toCache = [];
-			foreach ($categories as $category) {
-				$toCache[$category->id] = $category;
-			}
-
-			$this->cache = $this->cache + $toCache;
-
-			$cachedEntities = array_map(fn ($id) => $this->cache[$id], $cached);
-			$categories = array_merge($categories, $cachedEntities);
-			return new ArrayCollection($categories);
+			return Utils::all(array_map(fn ($id) => $this->async()->get($id), $idsToSearch), true)
+				->then(function ($categories) {
+					return new ArrayCollection($categories);
+				});
 		});
 
 		return $this->isAsync ? $promise : $promise->wait();

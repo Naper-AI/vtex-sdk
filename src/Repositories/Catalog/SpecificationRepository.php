@@ -7,6 +7,7 @@ use Naper\Vtex\Entities\Catalog\Specification;
 use Naper\Vtex\Interfaces\Catalog\SpecificationRepositoryInterface;
 use Naper\Vtex\Repositories\Traits\HasAsync;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Client;
 use Exception;
 
@@ -32,13 +33,16 @@ class SpecificationRepository extends AbstractRepository implements Specificatio
 	public function get(int $id): Specification|PromiseInterface
 	{
 		if (isset($this->cache[$id])) {
-			return $this->cache[$id];
+			if ($this->cache[$id] instanceof PromiseInterface) {
+				return $this->isAsync ? $this->cache[$id] : $this->cache[$id]->wait();
+			}
+			return $this->isAsync ? Create::promiseFor($this->cache[$id]) : $this->cache[$id];
 		}
 
 		$url = $this->baseUrl . "/api/catalog/pvt/specification/{$id}";
 		$promise = $this->client->requestAsync('GET', $url, [
 			'headers' => $this->getHeaders()
-		])->then(function ($res) {
+		])->then(function ($res) use ($id) {
 			$body = $res->getBody();
 			$data = json_decode($body, true);
 
@@ -59,10 +63,11 @@ class SpecificationRepository extends AbstractRepository implements Specificatio
 				defaultValue: $data['DefaultValue'],
 			);
 
-			$this->cache[$specification->id] = $specification;
+			$this->cache[$id] = $specification;
 			return $specification;
 		});
 
+		$this->cache[$id] = $promise;
 		return $this->isAsync ? $promise : $promise->wait();
 	}
 

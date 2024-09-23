@@ -9,6 +9,7 @@ use Naper\Vtex\Repositories\Traits\HasAsync;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Client;
 use Exception;
 
@@ -34,7 +35,10 @@ class SpecificationValueRepository extends AbstractRepository implements Specifi
 	public function getValues(int $fieldId): Collection|PromiseInterface
 	{
 		if (isset($this->cache[$fieldId])) {
-			return $this->cache[$fieldId];
+			if ($this->cache[$fieldId] instanceof PromiseInterface) {
+				return $this->isAsync ? $this->cache[$fieldId] : $this->cache[$fieldId]->wait();
+			}
+			return $this->isAsync ? Create::promiseFor($this->cache[$fieldId]) : $this->cache[$fieldId];
 		}
 
 		$url = $this->baseUrl . "/api/catalog_system/pub/specification/fieldvalue/{$fieldId}";
@@ -43,7 +47,6 @@ class SpecificationValueRepository extends AbstractRepository implements Specifi
 		])->then(function ($res) use ($fieldId) {
 			$body = $res->getBody();
 			$data = json_decode($body, true);
-
 			$values = new ArrayCollection(
 				array_map(fn ($item) => $this->factory->make(SpecificationValue::class,
 					fieldValueId: $item['FieldValueId'],
@@ -58,6 +61,7 @@ class SpecificationValueRepository extends AbstractRepository implements Specifi
 			return $values;
 		});
 
+		$this->cache[$fieldId] = $promise;
 		return $this->isAsync ? $promise : $promise->wait();
 	}
 
