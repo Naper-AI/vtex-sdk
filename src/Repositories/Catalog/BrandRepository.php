@@ -7,9 +7,9 @@ use Naper\Vtex\Interfaces\Catalog\BrandRepositoryInterface;
 use Naper\Vtex\Entities\Catalog\Brand;
 use Naper\Vtex\Repositories\Traits\HasAsync;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Client;
 use Exception;
-use GuzzleHttp\Promise\Create;
 
 /**
  * @todo implement missing methods

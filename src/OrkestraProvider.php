@@ -2,6 +2,7 @@
 
 namespace Naper\Vtex;
 
+use Naper\Vtex\Interfaces\Catalog\BrandRepositoryInterface;
 use Orkestra\App;
 use Orkestra\Interfaces\ProviderInterface;
 
@@ -13,7 +14,7 @@ use Naper\Vtex\Interfaces\Catalog\SkuRepositoryInterface;
 use Naper\Vtex\Interfaces\Catalog\SkuSpecificationRepositoryInterface;
 use Naper\Vtex\Interfaces\Catalog\SpecificationRepositoryInterface;
 use Naper\Vtex\Interfaces\Catalog\SpecificationValueRepositoryInterface;
-
+use Naper\Vtex\Repositories\Catalog\BrandRepository;
 use Naper\Vtex\Repositories\Catalog\CategoryRepository;
 use Naper\Vtex\Repositories\Catalog\ProductRepository;
 use Naper\Vtex\Repositories\Catalog\SkuFileRepository;
@@ -65,6 +66,7 @@ class OrkestraProvider implements ProviderInterface
 		$app->bind(SkuFileRepositoryInterface::class, SkuFileRepository::class)->constructor(...$vtexConfig, accountName: $getAccountName);
 		$app->bind(SpecificationRepositoryInterface::class, SpecificationRepository::class)->constructor(...$vtexConfig);
 		$app->bind(SpecificationValueRepositoryInterface::class, SpecificationValueRepository::class)->constructor(...$vtexConfig);
+		$app->bind(BrandRepositoryInterface::class, BrandRepository::class)->constructor(...$vtexConfig);
 	}
 
 	public function boot(App $app): void
