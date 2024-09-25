@@ -54,8 +54,8 @@ class Sku extends AbstractEntity
 		protected int $commercialConditionId,
 		protected string $measurementUnit,
 		protected float $unitMultiplier,
-		protected ?string $modalType = null,
 		protected bool $kitItemsSellApart, // The name is wrong in the API
+		protected ?string $modalType = null,
 		protected array $videos = [],
 	) {
 		//
