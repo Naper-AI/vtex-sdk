@@ -104,7 +104,7 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 				unset($data[$key]);
 			}
 
-			$data['releaseDate'] = new DateTime($data['releaseDate']);
+			$data['releaseDate'] = $data['releaseDate'] ? new DateTime($data['releaseDate']) : null;
 			$data['keyWords'] = explode(',', $data['keyWords']);
 			$data['keyWords'] = array_map('trim', $data['keyWords']);
 

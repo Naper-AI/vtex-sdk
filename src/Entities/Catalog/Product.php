@@ -41,7 +41,7 @@ class Product extends AbstractEntity
 		protected bool $isVisible,
 		protected string $description,
 		protected ?string $descriptionShort,
-		protected DateTimeInterface $releaseDate,
+		protected ?DateTimeInterface $releaseDate,
 		protected array $keyWords,
 		protected bool $isActive,
 		protected ?string $taxCode,
