@@ -6,7 +6,7 @@ use Orkestra\Entities\AbstractEntity;
 
 /**
  * @property-read string $itemId
- * @property-read int|null $listPrice
+ * @property-read float|null $listPrice
  * @property-read int $costPrice
  * @property-read float $markup
  * @property-read int $basePrice
@@ -19,7 +19,7 @@ class SkuPrice extends AbstractEntity
 	 */
 	public function __construct(
 		protected string $itemId,
-		protected ?int $listPrice,
+		protected ?float $listPrice,
 		protected int $costPrice,
 		protected float $markup,
 		protected int $basePrice,
