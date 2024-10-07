@@ -9,8 +9,10 @@ use Naper\Vtex\Entities\Catalog\ProductSpecification;
 use Naper\Vtex\Repositories\Traits\HasAsync;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
+use GuzzleHttp\Promise\Create;
+use GuzzleHttp\Promise\Each;
 use GuzzleHttp\Client;
 use Exception;
 use DateTime;
@@ -44,18 +46,20 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 		for ($i = $from; $i <= $to; $i += 250) {
 			if ($i + 250 > $to) {
 				$url = $this->baseUrl . "/api/catalog_system/pvt/products/GetProductAndSkuIds?_from={$i}&_to={$to}";
-				$promises[] = $this->client->getAsync($url, [
-					'headers' => $this->getHeaders()
-				]);
+				$promises[] = Create::promiseFor($url);
 				break;
 			}
 			$url = $this->baseUrl . "/api/catalog_system/pvt/products/GetProductAndSkuIds?_from={$i}&_to=" . ($i + 250);
-			$promises[] = $this->client->getAsync($url, [
-				'headers' => $this->getHeaders()
-			]);
+			$promises[] = Create::promiseFor($url);
 		}
 
-		$promise = $this->chunkResolver($promises)->then(function ($results) {
+		$results = [];
+		$promise = Each::ofLimitAll($promises, 20, function (string $url) use (&$results) {
+			$response = $this->client->get($url, [
+				'headers' => $this->getHeaders()
+			]);
+			$results[] = $response;
+		})->then(function () use (&$results) {
 			$productSdks = [];
 			foreach ($results as $response) {
 				$statusCode = $response->getStatusCode();
