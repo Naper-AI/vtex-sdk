@@ -55,7 +55,7 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 			]);
 		}
 
-		$promise = Utils::all($promises)->then(function ($results) {
+		$promise = $this->chunkResolver($promises)->then(function ($results) {
 			$productSdks = [];
 			foreach ($results as $response) {
 				$statusCode = $response->getStatusCode();
