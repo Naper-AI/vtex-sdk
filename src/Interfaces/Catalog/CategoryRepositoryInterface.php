@@ -29,4 +29,9 @@ interface CategoryRepositoryInterface extends AsyncRepositoryInterface
 	 * @return Collection<array-key,Category>|PromiseInterface<Collection<array-key,Category>>
 	 */
 	public function getSimilarCategories(Product $product): Collection|PromiseInterface;
+
+	/**
+	 * @return $this
+	 */
+	public function withCategory(int $categoryId): self;
 }

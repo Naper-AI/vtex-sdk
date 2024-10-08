@@ -26,6 +26,7 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 
 	private int $offset = 0;
 	private int $length = 100;
+	private ?int $categoryId = null;
 
 	public function __construct(
 		protected EntityFactory $factory,
@@ -37,6 +38,13 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 		//	
 	}
 
+	public function withCategory(int $categoryId): self
+	{
+		$clone = clone $this;
+		$clone->categoryId = $categoryId;
+		return $clone;
+	}
+
 	public function getIds(): array|PromiseInterface
 	{
 		$from = $this->offset + 1;
@@ -46,10 +54,12 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 		for ($i = $from; $i <= $to; $i += 250) {
 			if ($i + 250 > $to) {
 				$url = $this->baseUrl . "/api/catalog_system/pvt/products/GetProductAndSkuIds?_from={$i}&_to={$to}";
+				$url = $this->categoryId ? $url . "&categoryId={$this->categoryId}" : $url;
 				$promises[] = Create::promiseFor($url);
 				break;
 			}
 			$url = $this->baseUrl . "/api/catalog_system/pvt/products/GetProductAndSkuIds?_from={$i}&_to=" . ($i + 250);
+			$url = $this->categoryId ? $url . "&categoryId={$this->categoryId}" : $url;
 			$promises[] = Create::promiseFor($url);
 		}
 
@@ -139,6 +149,7 @@ class ProductRepository extends AbstractRepository implements ProductRepositoryI
 	public function count(): int
 	{
 		$url = $this->baseUrl . '/api/catalog_system/pvt/products/GetProductAndSkuIds?_from=1&_to=1';
+		$url = $this->categoryId ? $url . "&categoryId={$this->categoryId}" : $url;
 		$res = $this->client->request('GET', $url, [
 			'headers' => $this->getHeaders()
 		]);
