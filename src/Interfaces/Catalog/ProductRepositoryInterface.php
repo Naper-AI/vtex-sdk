@@ -12,6 +12,11 @@ use Countable;
 interface ProductRepositoryInterface extends AsyncRepositoryInterface, Countable
 {
 	/**
+	 * @return $this
+	 */
+	public function withCategory(int $categoryId): self;
+
+	/**
 	 * @return int[]|PromiseInterface<int[]>
 	 */
 	public function getIds(): array|PromiseInterface;
