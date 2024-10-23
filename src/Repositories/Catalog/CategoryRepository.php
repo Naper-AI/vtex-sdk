@@ -55,13 +55,6 @@ class CategoryRepository extends AbstractRepository implements CategoryRepositor
 				children: $item['children'] ?? []
 			), $data);
 
-			$toCache = [];
-			foreach ($categories as $category) {
-				$toCache[$category->id] = $category;
-			}
-
-			$this->cache += $toCache;
-
 			return new ArrayCollection($categories);
 		});
 
